@@ -1,5 +1,52 @@
 /* PAGE */
 
+.Vineyards {
+  text-align: center;
+}
+
+.vineyard {
+  margin: auto;
+  width: 70%;
+  background-size: cover;
+  height: 400px;
+  padding: 50px;
+  margin-bottom: 50px;
+}
+
+.vineyard .title {
+  background-color: rgba(255,255,255,0.5);
+  padding: 0.5em;
+}
+
+.vineyard .name {
+  font-size: 4em;
+  font-weight: bold;
+}
+
+.vineyard .desc {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.vineyard .rate {
+  font-size: 0.5em;
+  font-weight: bold;
+}
+
+.vineyard .buy .rate .unit {
+  font-size: 0.5em;
+}
+
+.vineyard .buy {
+  background-color: red;
+  color: white;
+  display: inline-block;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  font-size: 3em;
+}
+
+
 body,
 .pure-g [class*=pure-u] {
   font-family: 'Open Sans', sans-serif;
