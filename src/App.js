@@ -1,6 +1,12 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router'
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+// Import routing components
+import { Link } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom'
 import { HiddenOnlyAuth, VisibleOnlyAuth } from './util/wrappers.js'
 
 // UI Components
@@ -14,7 +20,6 @@ import './css/pure-min.css'
 import './App.css'
 import './css/list.css';
 var data = require('./data/vineyards.json');
-
 
 
 var Vineyard = React.createClass({
@@ -46,6 +51,12 @@ var Vineyard = React.createClass({
   }
 });
 
+class Home extends Component {
+    render(){
+        return  <Link to='/vineyards'>Vineyards</Link>;
+    }
+}
+
 var VineyardContainer = React.createClass({
   getInitialState() {
     return {
@@ -60,6 +71,7 @@ var VineyardContainer = React.createClass({
   render: function() {
     return (
       <div>
+      <p>TEST</p>
       { this.state.vineyards.map(function(item) {
           return (
             <Vineyard key={item.id} item={ item } />
@@ -70,7 +82,18 @@ var VineyardContainer = React.createClass({
   }
 });
 
+class Test extends Component {
+    render(){
+        return <p> test </p>;
+    }
+}
 
-ReactDOM.render(
- <VineyardContainer />,
-document.getElementById('container'));
+render(
+    <Router>
+    <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/vineyards" component={VineyardContainer} />
+    </Switch>
+    </Router>,
+    document.getElementById('container')
+);
