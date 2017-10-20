@@ -32,6 +32,7 @@ contract('VineyardRegistry', function(accounts) {
     it ('should be possible to create a vineyard', async() => { 
         tx = await VineyardRegistry.createVineyard('la Francisa', 'LFT', 1000, 10, 'Argentina', latitude1, longitude1, {from: admin });
 
+        console.log(tx);
         vinyardAddress = tx.logs[0].args.vinyardAddress;
         vinyard = VineyardAbi.at(vinyardAddress);
         assert.isNotNull(vinyard);

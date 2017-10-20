@@ -163,7 +163,7 @@ var AddVineyardContainer = React.createClass({
       
       var n1 = Number(supply);
       var n2 = Number(rate);
-      registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 200000}).then(tx => {
+      registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 2000000}).then(tx => {
         console.log(tx);
       }).catch(error => {
         console.log(error);
@@ -176,7 +176,7 @@ var VineyardContainer = React.createClass({
   getInitialState() {
     return {
       itemCount: 0,
-      vineyards: data,//[],
+      vineyards: [],
       web3: null
     };
   },
@@ -202,37 +202,32 @@ var VineyardContainer = React.createClass({
     );
   },
 
-  instantiateContract() {
+  async instantiateContract() {
 
     const contract = require('truffle-contract')
     
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
 
-    var registryInstance;
-    registry.deployed().then((instance) => {
-      registryInstance = instance
+    var registryInstance = await registry.deployed();
+    var count = await registryInstance.getVineyardCount();
+      
+      for (var i = 0; i < count.toNumber(); i++) { 
+        var data = await registryInstance.getVineyard(i);
 
-      registryInstance.getVineyardCount().then(count => {
-        
-        for (var i = 0; i < count.toNumber(); i++) { 
-          registryInstance.getVineyard(i).then(data => {
-            var vineyard = {
-              "name": data[0],
-              "country": data[1],
-              "latitude": data[2],
-              "longitude": data[3],
-              "tokenSupply": data[4],
-              "availableTokens": data[5],
-              "tokenRate": data[6]
-            };
+        var vineyard = {
+          "name": data[0],
+          "country": data[1],
+          "latitude": data[2],
+          "longitude": data[3],
+          "tokenSupply": data[4],
+          "availableTokens": data[5],
+          "tokenRate": data[6]
+        };
 
-            this.state.vineyards.push(vineyard);
-          })
-        }
-      })
-    })
-  }
+        this.state.vineyards.push(vineyard);
+      }
+    }
 });
 
 class Login extends Component {
