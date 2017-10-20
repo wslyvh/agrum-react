@@ -22,7 +22,7 @@ var Vineyard = React.createClass({
     return (
       <div class="item  col-xs-4 col-lg-4">
       <div class="thumbnail">
-          <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+          <img class="group list-group-image" src={this.props.item.image}  alt="" />
           <div class="caption">
               <h4 class="group inner list-group-item-heading">
                  {this.props.item.name}
@@ -72,5 +72,5 @@ var VineyardContainer = React.createClass({
 
 
 ReactDOM.render(
- <VineyardContainer />, 
+ <VineyardContainer />,
 document.getElementById('container'));

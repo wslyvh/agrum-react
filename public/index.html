@@ -1,31 +1,24 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <!--
-      Notice the use of %PUBLIC_URL% in the tag above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<html>
+<head>
+    <title>Test - Reading data in JSON format</title>
+</head>
+<body>
+  <div id="root" class="container">
+  </div>
+  <div id="container" class="container">
+      <div id="products" class="row list-group">
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Truffle Box</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start`.
-      To create a production bundle, use `npm run build`.
-    -->
-  </body>
+          <div class="item  col-xs-4 col-lg-4">
+                <div class="thumbnail">
+                  <img class="group list-group-image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwEc4DXn-wd2ltI2ndlLgA1I9l8XhruJH8ERkc53KGBxS_PUcuCw" alt="" />
+                  <div class="caption">
+                      <h4 class="group inner list-group-item-heading">
+                          More Vineyards Will Come soon</h4>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</body>
 </html>
