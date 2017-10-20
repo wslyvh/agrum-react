@@ -99,7 +99,10 @@ var AddVineyardContainer = React.createClass({
   componentWillMount: function() {
 
     getWeb3.then(results => {
-      this.setState({ web3: results.payload.web3Instance })
+      this.setState({ 
+        web3: results.payload.web3Instance,
+        defaultAccount: results.payload.web3Instance.eth.accounts[0]
+      })
     })
     .catch(error => console.log('Error finding web3: ' + error))
   },
@@ -144,6 +147,7 @@ var AddVineyardContainer = React.createClass({
     
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
+    var account = this.state.defaultAccount;
 
     var registryInstance;
     registry.deployed().then((instance) => {
@@ -159,9 +163,11 @@ var AddVineyardContainer = React.createClass({
       
       var n1 = Number(supply);
       var n2 = Number(rate);
-      registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude).then(tx => {
+      registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 200000}).then(tx => {
         console.log(tx);
-      });
+      }).catch(error => {
+        console.log(error);
+      })
     })
   },
 })

@@ -9,11 +9,10 @@ contract VineyardRegistry is Claimable {
 
     event VineyardCreated(address vinyardAddress, uint timestamp);
 
-    function createVineyard(string name, string symbol, uint initialSupply, uint rate)
-        onlyOwner
+    function createVineyard(string _name, string _symbol, uint _initialSupply, uint _rate, string _country, string _latitude, string _longitude)
         returns (Vineyard)
     {
-        Vineyard vineyard = new Vineyard(name, symbol, initialSupply, rate);
+        Vineyard vineyard = new Vineyard(_name, _symbol, _initialSupply, _rate, _country, _latitude, _longitude);
         vineyards.push(vineyard);
 
         VineyardCreated(vineyard, block.timestamp);
@@ -21,8 +20,12 @@ contract VineyardRegistry is Claimable {
     }
 
     function getVineyardCount() public constant
-        returns(uint vineyardCount)
-        {
+        returns(uint vineyardCount) {
             return vineyards.length;
+        }
+    
+    function getVineyard(uint index) public constant 
+        returns(address vineyardAddress) { 
+            return vineyards[index];
         }
 }
