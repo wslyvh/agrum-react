@@ -132,8 +132,7 @@ class Login extends Component {
 render(
     <Router>
     <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/login" component={Login} />
+        <Route exact path="/" component={Login} />
         <Route path="/vineyards" onEnter={requireAuth} component={VineyardContainer} />
         <Route path="/logged" component={Logged} />
     </Switch>
