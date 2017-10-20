@@ -1,0 +1,13 @@
+[{
+		"name": "La Francisca",
+		"description": "Chile ....",
+		"tokenRate": 1000,
+    "image" : "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Vi%C3%B1edo_Puente_Alto.jpg/1920px-Vi%C3%B1edo_Puente_Alto.jpg"
+	},
+	{
+		"name": "Beck",
+		"description": "Spain ....",
+		"tokenRate": 100,
+    "image" : "https://www.farmloans.com/wp-content/uploads/Napa_Valley-1024x349.jpg"
+	}
+]

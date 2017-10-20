@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
+import ReactDOM from 'react-dom';
 import { HiddenOnlyAuth, VisibleOnlyAuth } from './util/wrappers.js'
 
 // UI Components
@@ -11,44 +12,65 @@ import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
+import './css/list.css';
+var data = require('./data/vineyards.json');
 
-class App extends Component {
-  render() {
-    const OnlyAuthLinks = VisibleOnlyAuth(() =>
-      <span>
-        <li className="pure-menu-item">
-          <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
-        </li>
-        <li className="pure-menu-item">
-          <Link to="/profile" className="pure-menu-link">Profile</Link>
-        </li>
-        <LogoutButtonContainer />
-      </span>
-    )
 
-    const OnlyGuestLinks = HiddenOnlyAuth(() =>
-      <span>
-        <li className="pure-menu-item">
-          <Link to="/signup" className="pure-menu-link">Sign Up</Link>
-        </li>
-        <LoginButtonContainer />
-      </span>
-    )
 
+var Vineyard = React.createClass({
+  render: function() {
     return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-          <ul className="pure-menu-list navbar-right">
-            <OnlyGuestLinks />
-            <OnlyAuthLinks />
-          </ul>
-          <Link to="/" className="pure-menu-heading pure-menu-link">Truffle Box</Link>
-        </nav>
+      <div class="item  col-xs-4 col-lg-4">
+      <div class="thumbnail">
+          <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />
+          <div class="caption">
+              <h4 class="group inner list-group-item-heading">
+                 {this.props.item.name}
+              </h4>
+              <p class="group inner list-group-item-text">
+                   {this.props.item.description}
+              </p>
+              <div class="row">
+                  <div class="col-xs-12 col-md-6">
+                      <p class="lead">
+                          Token rate, ETH-TOKEN: {this.props.item.tokenRate} </p>
+                  </div>
+                  <div class="col-xs-12 col-md-6">
+                      <a class="btn btn-success" href="#">Buy some plots</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+    );
+  }
+});
 
-        {this.props.children}
+var VineyardContainer = React.createClass({
+  getInitialState() {
+    return {
+      vineyards: null
+    };
+  },
+  componentWillMount: function() {
+    this.setState({
+      vineyards: data
+    })
+  },
+  render: function() {
+    return (
+      <div>
+      { this.state.vineyards.map(function(item) {
+          return (
+            <Vineyard key={item.id} item={ item } />
+          )
+      }) }
       </div>
     );
   }
-}
+});
 
-export default App
+
+ReactDOM.render(
+ <VineyardContainer />, 
+document.getElementById('container'));
