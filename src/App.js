@@ -212,6 +212,7 @@ var VineyardContainer = React.createClass({
     var registryInstance = await registry.deployed();
     var count = await registryInstance.getVineyardCount();
       
+    var vineyards = [];
       for (var i = 0; i < count.toNumber(); i++) { 
         var data = await registryInstance.getVineyard(i);
 
@@ -225,8 +226,13 @@ var VineyardContainer = React.createClass({
           "tokenRate": data[6]
         };
 
-        this.state.vineyards.push(vineyard);
+        vineyards.push(vineyard);
       }
+      
+      this.setState({ 
+        itemCount: count.toNumber(),
+        vineyards: vineyards,
+      })
     }
 });
 
