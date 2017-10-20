@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 // Import routing components
 import { Link } from 'react-router-dom'
-import { GoogleMap, Marker } from "react-google-maps"
 import {
   BrowserRouter as Router,
   Route,
@@ -71,7 +70,9 @@ var Vineyard = React.createClass({
         <br/>
         <div className="buy">
           <div className="rate">{this.props.item.tokenRate} <span class="unit">ETH / plot</span></div>
-          Buy now
+          <div>
+            <Link to={`vineyard/${this.props.item.name}`}>Buy Now</Link>
+          </div>
         </div>
       </div>
     );
@@ -83,7 +84,6 @@ class Home extends Component {
         return (
           <div>
             <Link to='/add'>Add vineyard</Link>
-            <Link to='/vineyards'>Vineyards</Link>
           </div>
         );
     }
@@ -99,7 +99,7 @@ var AddVineyardContainer = React.createClass({
   componentWillMount: function() {
 
     getWeb3.then(results => {
-      this.setState({ 
+      this.setState({
         web3: results.payload.web3Instance,
         defaultAccount: results.payload.web3Instance.eth.accounts[0]
       })
@@ -110,41 +110,41 @@ var AddVineyardContainer = React.createClass({
     return (
       <div>
         <h4>Add vineyard</h4>
-        <div class="row">
+        <div >
           <label>Name:</label>
           <input type="text" id="name" />
         </div>
-        <div class="row">
+        <div >
           <label>Country:</label>
           <input type="text" id="country" />
         </div>
-        <div class="row">
+        <div >
           <label>Symbol:</label>
           <input type="text" id="symbol" />
         </div>
-        <div class="row">
+        <div >
           <label>Supply:</label>
           <input type="text" id="supply" />
         </div>
-        <div class="row">
+        <div >
           <label>Rate:</label>
           <input type="text" id="rate" />
         </div>
-        <div class="row">
+        <div >
           <label>Latitude:</label>
           <input type="text" id="latitude" />
         </div>
-        <div class="row">
+        <div >
           <label>Longitude:</label>
           <input type="text" id="longitude" />
         </div>
-        <div onClick={() => this.addVineyard()}>Add</div> 
+        <button onClick={() => this.addVineyard()}>Add</button>
       </div>
     );
   },
-  addVineyard: function() { 
+  addVineyard: function() {
     const contract = require('truffle-contract')
-    
+
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
     var account = this.state.defaultAccount;
@@ -160,7 +160,7 @@ var AddVineyardContainer = React.createClass({
       var rate = document.getElementById('rate').value
       var latitude = document.getElementById('latitude').value
       var longitude = document.getElementById('longitude').value
-      
+
       var n1 = Number(supply);
       var n2 = Number(rate);
       registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 2000000}).then(tx => {
@@ -189,7 +189,7 @@ var VineyardContainer = React.createClass({
     })
     .catch(error => console.log('Error finding web3: ' + error))
   },
-  
+
   render: function() {
     return (
       <div className="Vineyards">
@@ -205,15 +205,15 @@ var VineyardContainer = React.createClass({
   async instantiateContract() {
 
     const contract = require('truffle-contract')
-    
+
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
 
     var registryInstance = await registry.deployed();
     var count = await registryInstance.getVineyardCount();
-      
+
     var vineyards = [];
-      for (var i = 0; i < count.toNumber(); i++) { 
+      for (var i = 0; i < count.toNumber(); i++) {
         var data = await registryInstance.getVineyard(i);
 
         var vineyard = {
@@ -228,8 +228,8 @@ var VineyardContainer = React.createClass({
 
         vineyards.push(vineyard);
       }
-      
-      this.setState({ 
+
+      this.setState({
         itemCount: count.toNumber(),
         vineyards: vineyards,
       })
@@ -261,6 +261,19 @@ class Login extends Component {
   }
 }
 
+class ShowVinyard extends Component {
+    render(){
+        return (
+          <div>
+<h4>{this.props.match.params.name}</h4>
+          </div>
+        );
+    }
+}
+
+
+
+
 render(
     <Router>
     <Switch>
@@ -269,6 +282,7 @@ render(
         <Route path="/vineyards" onEnter={requireAuth} component={VineyardContainer} />
         <Route path="/logged" component={Logged} />
         <Route path="/add" component={AddVineyardContainer} />
+        <Route path="/vineyard/:name" component={ShowVinyard} />
     </Switch>
     </Router>,
     document.getElementById('container')
