@@ -10,16 +10,24 @@ contract Vineyard is Claimable {
     VineyardToken token;
     uint etherToTokenRate;
 
-    // metadata (geo, ratioPerBottle, )
+    string public name;
+    string public country;
+    string public latitude;
+    string public longitude;
 
-    event VineyardTokenCreated(address tokenAddress, string name, string symbol, uint initialSupply, uint timestamp);
-    event PlotBought(address owner, uint amountPaid, uint tokensReceived, uint timestamp);
+    event VineyardTokenCreated(address _tokenAddress, string _name, string _symbol, uint _initialSupply, uint _timestamp);
+    event PlotBought(address _owner, uint _amountPaid, uint _tokensReceived, uint _timestamp);
 
-    function Vineyard(string name, string symbol, uint initialSupply, uint rate) {
-        token = new VineyardToken(name, symbol, initialSupply);
-        etherToTokenRate = rate;
+    function Vineyard(string _name, string _symbol, uint _initialSupply, uint _rate, string _country, string _latitude, string _longitude) {
+        token = new VineyardToken(_name, _symbol, _initialSupply);
+        etherToTokenRate = _rate;
 
-        VineyardTokenCreated(token, name, symbol, initialSupply, block.timestamp);
+        name = _name;
+        country = _country;
+        latitude = _latitude;
+        longitude = _longitude;
+
+        VineyardTokenCreated(token, _name, _symbol, _initialSupply, block.timestamp);
     }
 
     function buyPlot() public payable returns (bool success) { 
@@ -39,11 +47,16 @@ contract Vineyard is Claimable {
     function getTokenAddress() constant public 
         returns (address tokenAddress) {
             return token;
-    }
+        }
 
     function getAvailableTokens() constant public 
         returns (uint availableTokens) { 
             return token.balanceOf(address(this));
+        }
+
+    function getMetadata() constant public 
+        returns(string _name, string _country, string _latitude, string _longitude, uint _allTokens, uint _availableTokens, uint _rate) {
+            return (name, country, latitude, longitude, token.INITIAL_SUPPLY(), token.balanceOf(address(this)), etherToTokenRate);
         }
 
 // NICE TO HAVE
