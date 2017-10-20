@@ -1,44 +1,99 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
-import { Provider } from 'react-redux'
-import { syncHistoryWithStore } from 'react-router-redux'
-import { UserIsAuthenticated, UserIsNotAuthenticated } from './util/wrappers.js'
-import getWeb3 from './util/web3/getWeb3'
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+// Import routing components
+import { Link } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from 'react-router-dom'
+import { HiddenOnlyAuth, VisibleOnlyAuth } from './util/wrappers.js'
 
-// Layouts
-import App from './App'
-import Home from './layouts/home/Home'
-import Dashboard from './layouts/dashboard/Dashboard'
-import SignUp from './user/layouts/signup/SignUp'
-import Profile from './user/layouts/profile/Profile'
+// UI Components
+import LoginButtonContainer from './user/ui/loginbutton/LoginButtonContainer'
+import LogoutButtonContainer from './user/ui/logoutbutton/LogoutButtonContainer'
 
-// Redux Store
-import store from './store'
+// Styles
+import './css/oswald.css'
+import './css/open-sans.css'
+import './css/pure-min.css'
+import './App.css'
+import './css/list.css';
+var data = require('./data/vineyards.json');
 
-// Initialize react-router-redux.
-const history = syncHistoryWithStore(browserHistory, store)
 
-// Initialize web3 and set in Redux.
-getWeb3
-.then(results => {
-  console.log('Web3 initialized!')
-})
-.catch(() => {
-  console.log('Error in web3 initialization.')
-})
+var Vineyard = React.createClass({
+  render: function() {
+    return (
+      <div class="item  col-xs-4 col-lg-4">
+      <div class="thumbnail">
+          <img class="group list-group-image" src={this.props.item.image}  alt="" />
+          <div class="caption">
+              <h4 class="group inner list-group-item-heading">
+                 {this.props.item.name}
+              </h4>
+              <p class="group inner list-group-item-text">
+                   {this.props.item.description}
+              </p>
+              <div class="row">
+                  <div class="col-xs-12 col-md-6">
+                      <p class="lead">
+                          Token rate, ETH-TOKEN: {this.props.item.tokenRate} </p>
+                  </div>
+                  <div class="col-xs-12 col-md-6">
+                      <a class="btn btn-success" href="#">Buy some plots</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+    );
+  }
+});
 
-ReactDOM.render((
-    <Provider store={store}>
-      <Router history={history}>
-        <Route path="/" component={App}>
-          <IndexRoute component={Home} />
-          <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
-          <Route path="signup" component={UserIsNotAuthenticated(SignUp)} />
-          <Route path="profile" component={UserIsAuthenticated(Profile)} />
-        </Route>
-      </Router>
-    </Provider>
-  ),
-  document.getElementById('root')
-)
+class Home extends Component {
+    render(){
+        return  <Link to='/vineyards'>Vineyards</Link>;
+    }
+}
+
+var VineyardContainer = React.createClass({
+  getInitialState() {
+    return {
+      vineyards: null
+    };
+  },
+  componentWillMount: function() {
+    this.setState({
+      vineyards: data
+    })
+  },
+  render: function() {
+    return (
+      <div>
+      <p>TEST</p>
+      { this.state.vineyards.map(function(item) {
+          return (
+            <Vineyard key={item.id} item={ item } />
+          )
+      }) }
+      </div>
+    );
+  }
+});
+
+class Test extends Component {
+    render(){
+        return <p> test </p>;
+    }
+}
+
+render(
+    <Router>
+    <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/vineyards" component={Test} />
+    </Switch>
+    </Router>,
+    document.getElementById('container')
+);
