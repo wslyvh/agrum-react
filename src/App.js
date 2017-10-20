@@ -13,19 +13,20 @@ import getWeb3 from './util/web3/getWeb3'
 
 // Contracts
 import VineyardRegistryContract from '../build/contracts/VineyardRegistry.json'
+import VineyardContract from '../build/contracts/Vineyard.json'
 
 // UI Components
 import LoginButton from './user/ui/loginbutton/LoginButton'
 import LogoutButtonContainer from './user/ui/logoutbutton/LogoutButtonContainer'
 
-
+const contract = require('truffle-contract')
 // Styles
 import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 import './css/list.css';
-var data = require('./data/vineyards.json');
+var imgs = require('./data/vineyards.json');
 
 
 
@@ -59,11 +60,15 @@ class Logged extends Component {
 
 var Vineyard = React.createClass({
   render: function() {
+    // console.log('---', this.props.item)
+    // return (
+      // <div>{this.props.item.name}</div>
+    // );
     return (
-      <div className="vineyard" style={{backgroundImage: 'url(' + this.props.item.image + ')'  }}>
+      <div className="vineyard" style={{backgroundImage: 'url(' + imgs[this.props.item.id] + ')'  }}>
         <div className="title">
           <div className="name">{this.props.item.name}</div>
-          <div className="desc">{this.props.item.description}</div>
+          <div className="desc">{this.props.item.country}</div>
         </div>
         <br/>
         <br/>
@@ -142,9 +147,9 @@ var AddVineyardContainer = React.createClass({
       </div>
     );
   },
-  addVineyard: function() {
-    const contract = require('truffle-contract')
+  addVineyard: function() { 
 
+    
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
     var account = this.state.defaultAccount;
@@ -194,6 +199,9 @@ var VineyardContainer = React.createClass({
     return (
       <div className="Vineyards">
       { this.state.vineyards.map(function(item) {
+      console.log("!")
+      console.log(item)
+        
           return (
             <Vineyard key={item.id} item={ item } />
           )
@@ -204,8 +212,8 @@ var VineyardContainer = React.createClass({
 
   async instantiateContract() {
 
-    const contract = require('truffle-contract')
-
+    // const contract = require('truffle-contract')
+    
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
 
@@ -213,23 +221,34 @@ var VineyardContainer = React.createClass({
     var count = await registryInstance.getVineyardCount();
 
     var vineyards = [];
-      for (var i = 0; i < count.toNumber(); i++) {
-        var data = await registryInstance.getVineyard(i);
+      for (var i = 0; i < count.toNumber(); i++) { 
+        var vineyardAddress = await registryInstance.getVineyard(i);
+    
+        var vineyardContract = contract(VineyardContract)
+        vineyardContract.setProvider(this.state.web3.currentProvider)
+        
+        var vinyardInstance = vineyardContract.at(vineyardAddress)
+
+        var data = await vinyardInstance.getMetadata()
+        console.log(data)
 
         var vineyard = {
+          "id": i,
           "name": data[0],
           "country": data[1],
           "latitude": data[2],
           "longitude": data[3],
-          "tokenSupply": data[4],
-          "availableTokens": data[5],
-          "tokenRate": data[6]
+          "tokenSupply": data[4].toNumber(),
+          "availableTokens": data[5].toNumber(),
+          "tokenRate": data[6].toNumber()
         };
+
 
         vineyards.push(vineyard);
       }
-
-      this.setState({
+      console.log(vineyards)
+      
+      this.setState({ 
         itemCount: count.toNumber(),
         vineyards: vineyards,
       })
