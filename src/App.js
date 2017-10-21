@@ -28,7 +28,7 @@ import './App.css'
 import './css/list.css';
 var imgs = require('./data/vineyards.json');
 
-
+var BuyPlotContainer = require('./containers/buy.js').BuyPlotContainer
 
 function isLoggedIn() {
   return this.state.loggedIn;
@@ -280,49 +280,7 @@ class Login extends Component {
   }
 }
 
-var ShowVinyard = React.createClass({
-  componentWillMount: function() {
 
-    getWeb3.then(results => {
-      this.setState({ web3: results.payload.web3Instance })
-
-      this.instantiateContract()
-    })
-    .catch(error => console.log('Error finding web3: ' + error))
-  },
-
-  async instantiateContract() {
-    console.log('-----')
-    console.log(this.state)
-    var vineyardContract = contract(VineyardContract)
-    vineyardContract.setProvider(this.state.web3.currentProvider)
-
-    var vineyardAddress = this.props.match.params.address
-    var vinyardInstance = vineyardContract.at(vineyardAddress)
-
-    var data = await vinyardInstance.getMetadata()
-    console.log(data)
-
-    var vineyard = {
-      "name": data[0],
-      "country": data[1],
-      "latitude": data[2],
-      "longitude": data[3],
-      "tokenSupply": data[4].toNumber(),
-      "availableTokens": data[5].toNumber(),
-      "tokenRate": data[6].toNumber(),
-      "address": vineyardAddress
-    };
-},
-
-    render(){
-      return (
-        <div>
-          <h4>{this.props.match.params.address}</h4>
-        </div>
-      );
-    }
-})
 
 
 
@@ -334,7 +292,7 @@ render(
         <Route path="/vineyards" onEnter={requireAuth} component={VineyardContainer} />
         <Route path="/logged" component={Logged} />
         <Route path="/add" component={AddVineyardContainer} />
-        <Route path="/vineyard/:address" component={ShowVinyard} />
+        <Route path="/vineyard/:address" component={BuyPlotContainer} />
     </Switch>
     </Router>,
     document.getElementById('container')
