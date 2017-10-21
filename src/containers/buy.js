@@ -20,8 +20,13 @@ let cols=["#dddddd","#b8f441","#f44b42","yellow","orange","gray"]
 var BuyPlotContainer = React.createClass({
 
   componentWillMount: function() {
+
     getWeb3.then(results => {
-      this.setState({ web3: results.payload.web3Instance })
+      this.setState({ 
+        web3: results.payload.web3Instance,
+        defaultAccount: results.payload.web3Instance.eth.accounts[0], 
+      })
+
       this.instantiateContract()
     })
     .catch(error => console.log('Error finding web3: ' + error))
@@ -157,14 +162,15 @@ var BuyPlotContainer = React.createClass({
 
   render: function() {
     let summary = null;
+    let account = this.state.defaultAccount; // localStorage.getItem('userAddress')
+    
+
     if(this.state.boughtTokens > 0){
-      summary = <div> <p>You Bought: {this.state.boughtTokens}</p> </div>;
+      summary = <div> <p>You Bought: {this.state.boughtTokens} tokens</p> </div>;
     }
     console.log("#####")
     console.log(globalStore)
     return (
-
-
 
       <div>
       <MenuComponent />
@@ -180,7 +186,7 @@ var BuyPlotContainer = React.createClass({
           <p>Signed in as {localStorage.getItem('userName')}</p>
           <h4>Only {this.state.availableTokens} tokens available</h4>
           <div >
-            <input type="hidden" id="address"  value={localStorage.getItem('userAddress')}/>
+            <input type="hidden" id="address"  value={account}/>
           </div>
           <div >
             ETH: <input type="text" id="ether" />

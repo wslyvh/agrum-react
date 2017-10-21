@@ -116,6 +116,7 @@ var AddVineyardContainer = React.createClass({
       var n2 = Number(rate);
       registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 2000000}).then(tx => {
         console.log(tx);
+        window.location = "/vineyards";
       }).catch(error => {
         console.log(error);
       })
