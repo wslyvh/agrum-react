@@ -76,7 +76,7 @@ var Vineyard = React.createClass({
         <div className="buy">
           <div className="rate">{this.props.item.tokenRate} <span class="unit">ETH / plot</span></div>
           <div>
-            <Link to={`vineyard/${this.props.item.name}`}>Buy Now</Link>
+            <Link to={`vineyard/${this.props.item.address}`}>Buy Now</Link>
           </div>
         </div>
       </div>
@@ -148,9 +148,9 @@ var AddVineyardContainer = React.createClass({
       </div>
     );
   },
-  addVineyard: function() { 
+  addVineyard: function() {
 
-    
+
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
     var account = this.state.defaultAccount;
@@ -202,7 +202,7 @@ var VineyardContainer = React.createClass({
       { this.state.vineyards.map(function(item) {
       console.log("!")
       console.log(item)
-        
+
           return (
             <Vineyard key={item.id} item={ item } />
           )
@@ -214,7 +214,7 @@ var VineyardContainer = React.createClass({
   async instantiateContract() {
 
     // const contract = require('truffle-contract')
-    
+
     const registry = contract(VineyardRegistryContract)
     registry.setProvider(this.state.web3.currentProvider)
 
@@ -222,12 +222,12 @@ var VineyardContainer = React.createClass({
     var count = await registryInstance.getVineyardCount();
 
     var vineyards = [];
-      for (var i = 0; i < count.toNumber(); i++) { 
+      for (var i = 0; i < count.toNumber(); i++) {
         var vineyardAddress = await registryInstance.getVineyard(i);
-    
+
         var vineyardContract = contract(VineyardContract)
         vineyardContract.setProvider(this.state.web3.currentProvider)
-        
+
         var vinyardInstance = vineyardContract.at(vineyardAddress)
 
         var data = await vinyardInstance.getMetadata()
@@ -241,15 +241,16 @@ var VineyardContainer = React.createClass({
           "longitude": data[3],
           "tokenSupply": data[4].toNumber(),
           "availableTokens": data[5].toNumber(),
-          "tokenRate": data[6].toNumber()
+          "tokenRate": data[6].toNumber(),
+          "address": vineyardAddress
         };
 
 
         vineyards.push(vineyard);
       }
       console.log(vineyards)
-      
-      this.setState({ 
+
+      this.setState({
         itemCount: count.toNumber(),
         vineyards: vineyards,
       })
@@ -301,7 +302,7 @@ render(
         <Route path="/vineyards" onEnter={requireAuth} component={VineyardContainer} />
         <Route path="/logged" component={Logged} />
         <Route path="/add" component={AddVineyardContainer} />
-        <Route path="/vineyard/:name" component={ShowVinyard} />
+        <Route path="/vineyard/:address" component={ShowVinyard} />
     </Switch>
     </Router>,
     document.getElementById('container')
