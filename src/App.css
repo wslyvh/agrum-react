@@ -64,9 +64,18 @@ code {
 }
 
 .container {
-  box-sizing: border-box;
-  width: 100%;
+  text-align: center;
+}
+
+.splash {
+  display: inline-block;
   padding: 45px 20px;
+  text-align: center;
+}
+
+.splash ul {
+  text-align: left;
+  display: inline-block;
 }
 
 .pure-button-primary {
