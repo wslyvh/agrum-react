@@ -57,7 +57,7 @@ var AddVineyardContainer = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div className="admin-add">
         <MenuComponent />
         <h4>Add vineyard</h4>
         <div >
@@ -88,6 +88,7 @@ var AddVineyardContainer = React.createClass({
           <label>Longitude:</label>
           <input type="text" id="longitude" />
         </div>
+        <br />
         <button onClick={() => this.addVineyard()}>Add</button>
       </div>
     );

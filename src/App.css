@@ -48,6 +48,14 @@
   color: white;
 }
 
+.admin-add label {
+  width: 100px;
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
 .sold {
   background: #f44b42;
 }
