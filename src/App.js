@@ -14,8 +14,11 @@ import getWeb3 from './util/web3/getWeb3'
 // Contracts
 import VineyardRegistryContract from '../build/contracts/VineyardRegistry.json'
 import VineyardContract from '../build/contracts/Vineyard.json'
+import globalStore from "./globalStore.js";
 
 const contract = require('truffle-contract')
+
+
 // Styles
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -297,7 +300,7 @@ class ShowVinyard extends Component {
   componentDidMount(){
 
     var rectangle;
- 
+
     var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
 
     var self = this;
@@ -321,7 +324,7 @@ class ShowVinyard extends Component {
     var options = {
       "method": "GET",
       "hostname": "api.what3words.com",
-      "port": null,      
+      "port": null,
       "path": "/v2/reverse?coords=-33.560367%2C-69.038029&key=VH9BH3CX&lang=en&format=json&display=full",
       "headers": {}
     };
@@ -335,8 +338,8 @@ class ShowVinyard extends Component {
 
       res.on("end", function () {
         var body = Buffer.concat(chunks);
-        //console.log(JSON.parse(body.toString()).words ); 
-        self.setState({what3wordsVineyard:JSON.parse(body.toString()).words});           
+        //console.log(JSON.parse(body.toString()).words );
+        self.setState({what3wordsVineyard:JSON.parse(body.toString()).words});
         //console.log(body.toString());
       });
     });
@@ -349,7 +352,7 @@ class ShowVinyard extends Component {
     var NW=new window.google.maps.LatLng(-33.560367, -69.038029)
     var width = 8;
     var height = 13;
-  
+
     var NS = window.google.maps.geometry.spherical.computeOffset(NW,20,90)
     var SS = window.google.maps.geometry.spherical.computeOffset(NW,20,180)
 
@@ -371,7 +374,7 @@ class ShowVinyard extends Component {
           rectArr.push(rectangle);
 
           this.bindWindow(rectangle,rectArr.length);
-        
+
         var SW = window.google.maps.geometry.spherical.computeOffset(SW,20,90)
         var NE = window.google.maps.geometry.spherical.computeOffset(NE,20,90)
       }
@@ -436,10 +439,10 @@ class ShowVinyard extends Component {
     //instantiate contract and buy
     var vineyardAddress = this.props.match.params.address;
 
-    
+
     var vineyardContract = contract(VineyardContract)
     vineyardContract.setProvider(this.state.web3.currentProvider)
-        
+
     var vinyardInstance = vineyardContract.at(vineyardAddress)
 
     return vinyardInstance.buyPlot( {from:this.state.defaultAccount ,  value:this.state.plotAmount, gas: 3000000 })
@@ -447,9 +450,9 @@ class ShowVinyard extends Component {
               console.log(tx.receipt);;
               console.log(tx.logs[0].args);
 
-              this.setState({buyPlotLog:'Transaction Ok'})                         
+              this.setState({buyPlotLog:'Transaction Ok'})
             })
-  }   
+  }
 
     render(){
         return (
@@ -458,7 +461,7 @@ class ShowVinyard extends Component {
           <h4>what3words location: {this.state.what3wordsVineyard}</h4>
           <h4>Buy (in Wei): </h4>
           <form onSubmit={this.buyPlot} >
-            <input value={this.state.plotAmount} placeholder="1000" onChange={e => this.setState({ plotAmount: e.target.value })}/>            
+            <input value={this.state.plotAmount} placeholder="1000" onChange={e => this.setState({ plotAmount: e.target.value })}/>
             <button type="submit"> Submit </button>
           </form>
           <div>

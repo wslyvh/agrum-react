@@ -1,6 +1,7 @@
 import React from 'react'
 import Router from 'react-router-dom'
 import { Connect,SimpleSigner } from 'uport-connect'
+import globalStore from "../../../globalStore.js";
 
 const uport = new Connect('Demo Agrum 2', {
       clientId: '2owCVfu4em2TQuCxPgauDQA2pXTYApWCFoj',
@@ -25,6 +26,8 @@ const LoginButton = ({ onLoginUserClick }) => {
 
 function uPortLogin() {
     uport.requestCredentials({requested: ['name','email','country']}).then((credentials) => {
+      localStorage.setItem('userAddress', credentials.address);
+      localStorage.setItem('userName', credentials.name);
     	window.location='/vineyards';
     })
 }

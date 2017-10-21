@@ -3,6 +3,7 @@ const contract = require('truffle-contract')
 import getWeb3 from '../util/web3/getWeb3'
 import VineyardContract from '../../build/contracts/Vineyard.json'
 import VineyardRegistryContract from '../../build/contracts/VineyardRegistry.json'
+import globalStore from "../globalStore.js";
 
 let map;
 let bounds = new window.google.maps.LatLngBounds();
@@ -136,14 +137,17 @@ var BuyPlotContainer = React.createClass({
     if(this.state.boughtTokens > 0){
       summary = <div> <p>You Bought: {this.state.boughtTokens}</p> </div>;
     }
+    console.log("#####")
+    console.log(globalStore)
     return (
 
 
+
       <div>
+        <p>Thanks {localStorage.getItem('userName')} for willing to buy plots</p>
         <h4>Buy plot - Only {this.state.availableTokens} tokens available</h4>
         <div >
-          <label>from:</label>
-          <input type="text" id="address" />
+          <input type="hidden" id="address"  value={localStorage.getItem('userAddress')}/>
         </div>
         <div >
           <label>Ether:</label>
