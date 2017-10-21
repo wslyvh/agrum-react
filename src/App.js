@@ -15,10 +15,6 @@ import getWeb3 from './util/web3/getWeb3'
 import VineyardRegistryContract from '../build/contracts/VineyardRegistry.json'
 import VineyardContract from '../build/contracts/Vineyard.json'
 
-// UI Components
-import LoginButton from './user/ui/loginbutton/LoginButton'
-import LogoutButtonContainer from './user/ui/logoutbutton/LogoutButtonContainer'
-
 const contract = require('truffle-contract')
 // Styles
 import './css/oswald.css'
@@ -29,6 +25,7 @@ import './css/list.css';
 var imgs = require('./data/vineyards.json');
 
 var BuyPlotContainer = require('./containers/buy.js').BuyPlotContainer
+var LoginContainer = require('./containers/login.js').LoginContainer
 
 function isLoggedIn() {
   return this.state.loggedIn;
@@ -257,28 +254,6 @@ var VineyardContainer = React.createClass({
     }
 });
 
-class Login extends Component {
-  render() {
-    return(
-      <main className="splash">
-         <img height="100px" src="https://s3.ap-south-1.amazonaws.com/demo-agrum/logo-fundo-branco.png" />
-          <h1>Welcome to Agrum</h1>
-          <span><LoginButton /></span>
-          <br />
-          <br />
-          <span>Developed by <strong>Daniel Novy's Team</strong> at Dubai's Hackaton</span>
-          <br />
-          <ul>
-            <li>Fernando Paris</li>
-            <li>Wesley van Heije</li>
-            <li>Luiz Hamilton Soares</li>
-            <li>Patricio L&oacute;pez</li>
-            <li>Marc de Klerk</li>
-          </ul>
-      </main>
-    )
-  }
-}
 
 
 
@@ -288,7 +263,7 @@ class Login extends Component {
 render(
     <Router>
     <Switch>
-        <Route exact path="/" component={Login} />
+        <Route exact path="/" component={LoginContainer} />
         <Route path="/vineyards" onEnter={requireAuth} component={VineyardContainer} />
         <Route path="/logged" component={Logged} />
         <Route path="/add" component={AddVineyardContainer} />
