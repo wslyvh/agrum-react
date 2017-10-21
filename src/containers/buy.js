@@ -147,6 +147,8 @@ var BuyPlotContainer = React.createClass({
       "address": this.state.vineyardContract.address
     };
     this.setState({ vineyard: vineyard });
+    this.setState({ name: data[0] });
+    this.setState({ country: data[1] });
     this.setState({ tokenSupply: data[4].toNumber() });
     this.setState({ availableTokens: data[5].toNumber() });
 
@@ -167,23 +169,32 @@ var BuyPlotContainer = React.createClass({
       <div>
       <MenuComponent />
 
-        <p>Thanks {localStorage.getItem('userName')} for willing to buy plots</p>
-        <h4>Buy plot - Only {this.state.availableTokens} tokens available</h4>
-        <div >
-          <input type="hidden" id="address"  value={localStorage.getItem('userAddress')}/>
+      <div className="floaty float-title">
+        <div className="title">
+          <div className="name">{this.state.name}</div>
+          <div className="desc">{this.state.country}</div>
         </div>
-        <div >
-          <label>Ether:</label>
-          <input type="text" id="ether" />
+      </div>
+
+        <div className="floaty float-buy">
+          <p>Signed in as {localStorage.getItem('userName')}</p>
+          <h4>Only {this.state.availableTokens} tokens available</h4>
+          <div >
+            <input type="hidden" id="address"  value={localStorage.getItem('userAddress')}/>
+          </div>
+          <div >
+            ETH: <input type="text" id="ether" />
+            <button onClick={() => this.buyPlots()}>Buy</button>
+          </div>
+
+          {summary}
+
         </div>
-        <div>
-          <button onClick={() => this.buyPlots()}>Buy</button>
-        </div>
-        {summary}
 
         <div id="map" style={{width: '100%' , height:'600px'}} ></div>
         <p>* Red sold - Green available</p>
      </div>
+
     );
   },
 

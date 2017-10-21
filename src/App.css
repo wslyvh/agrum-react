@@ -48,6 +48,18 @@
   color: white;
 }
 
+.floaty {
+  position: absolute;
+  z-index: 99;
+  background-color: rgba(255,255,255,0.8);
+}
+
+.float-buy {
+    padding: 20px;
+    margin-left: 70%;
+    margin-top: 20px;
+}
+
 .admin-add label {
   width: 100px;
   display: inline-block;
@@ -63,6 +75,25 @@
 .available {
   background: #b8f441;
 }
+
+.float-title {
+  width: 60vh;
+  text-align: left;
+  padding: 5px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.float-title .name {
+  font-size: 3em;
+  font-weight: bold;
+}
+
+.float-title .desc {
+  font-size: 1em;
+  font-weight: bold;
+}
+
 
 .vineyard .title {
   background-color: rgba(255,255,255,0.5);
