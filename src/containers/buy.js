@@ -4,6 +4,7 @@ import getWeb3 from '../util/web3/getWeb3'
 import VineyardContract from '../../build/contracts/Vineyard.json'
 import VineyardRegistryContract from '../../build/contracts/VineyardRegistry.json'
 import globalStore from "../globalStore.js";
+import '../App.css'
 
 let map;
 let bounds = new window.google.maps.LatLngBounds();
@@ -59,14 +60,15 @@ var BuyPlotContainer = React.createClass({
     return {
       web3: null,
       availableTokens : 0,
-      vineyard: null
+      vineyard: {}
     };
   },
 
   async drawRects() {
-    console.log('drawing..')
-    
-    var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
+
+    var lat = this.state.vineyard.latitude;
+    var long = this.state.vineyard.longitude;
+    var coachella = new window.google.maps.LatLng(lat, long);
     
         var self = this;
     
@@ -82,8 +84,7 @@ var BuyPlotContainer = React.createClass({
           mapTypeId: window.google.maps.MapTypeId.SATELLITE
         });
 
-
-    var NW=new window.google.maps.LatLng(-33.560367, -69.038029)
+    var NW=new window.google.maps.LatLng(lat, long)
     var width = 8;
     var height = 13;
   
