@@ -9,33 +9,31 @@ var BuyPlotContainer = React.createClass({
   componentWillMount: function() {
     getWeb3.then(results => {
       this.setState({ web3: results.payload.web3Instance })
-
       this.instantiateContract()
     })
     .catch(error => console.log('Error finding web3: ' + error))
   },
 
-  instantiateContract() {
+  async instantiateContract() {
     var vineyardContract = contract(VineyardContract)
     vineyardContract.setProvider(this.state.web3.currentProvider)
 
     var vineyardAddress = this.props.match.params.address
     var vineyard = vineyardContract.at(vineyardAddress)
-
-    this.setState({ vineyard: vineyard })
-
-    console.log(this.getMetadata())
+    this.setState({vineyardContract: vineyard})
+    await this.getMetadata()
 },
 
   getInitialState() {
     return {
-      vineyard: null,
-      web3: null
+      web3: null,
+      availableTokens : 1,
+      vineyard: null
     };
   },
 
   async getMetadata() {
-    var data = await this.state.vineyard.getMetadata()
+    var data = await this.state.vineyardContract.getMetadata()
     console.log(data)
 
     var vineyard = {
@@ -46,71 +44,52 @@ var BuyPlotContainer = React.createClass({
       "tokenSupply": data[4].toNumber(),
       "availableTokens": data[5].toNumber(),
       "tokenRate": data[6].toNumber(),
-      "address": this.state.vineyard.address
+      "address": this.state.vineyardContract.address
     };
+    this.setState({ vineyard: vineyard });
+    this.setState({ availableTokens: data[5].toNumber() });
   },
 
   render: function() {
+    let summary = null;
+    if(this.state.boughtTokens > 0){
+      summary = <div> <p>You Bought: {this.state.boughtTokens}</p> </div>;
+    }
     return (
+
+
       <div>
-        <h4>Add vineyard</h4>
+        <h4>Buy plot - Only {this.state.availableTokens} tokens available</h4>
         <div >
-          <label>Name:</label>
-          <input type="text" id="name" />
+          <label>from:</label>
+          <input type="text" id="address" />
         </div>
         <div >
-          <label>Country:</label>
-          <input type="text" id="country" />
+          <label>Ether:</label>
+          <input type="text" id="ether" />
         </div>
-        <div >
-          <label>Symbol:</label>
-          <input type="text" id="symbol" />
+        <div>
+          <button onClick={() => this.buyPlots()}>Buy</button>
         </div>
-        <div >
-          <label>Supply:</label>
-          <input type="text" id="supply" />
-        </div>
-        <div >
-          <label>Rate:</label>
-          <input type="text" id="rate" />
-        </div>
-        <div >
-          <label>Latitude:</label>
-          <input type="text" id="latitude" />
-        </div>
-        <div >
-          <label>Longitude:</label>
-          <input type="text" id="longitude" />
-        </div>
-      </div>
+          {summary}
+     </div>
     );
   },
 
-  addVineyard: function() {
-    const registry = contract(VineyardRegistryContract)
-    registry.setProvider(this.state.web3.currentProvider)
-    var account = this.state.defaultAccount;
+  buyPlots: function() {
 
-    var registryInstance;
-    registry.deployed().then((instance) => {
-      registryInstance = instance
-      //string _name, string _symbol, uint _initialSupply, uint _rate, string _country, string _latitude, string _longitude
-      var name = document.getElementById('name').value
-      var country = document.getElementById('country').value
-      var symbol = document.getElementById('symbol').value
-      var supply = document.getElementById('supply').value
-      var rate = document.getElementById('rate').value
-      var latitude = document.getElementById('latitude').value
-      var longitude = document.getElementById('longitude').value
+    var vineyard = this.state.vineyardContract;
+    var address = document.getElementById('address').value
+    var ether = document.getElementById('ether').value
 
-      var n1 = Number(supply);
-      var n2 = Number(rate);
-      registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 2000000}).then(tx => {
-        console.log(tx);
-      }).catch(error => {
+    vineyard.buyPlot({from: address , value: ether , gas: 2000000}).then((tx) => {
+          console.log(tx);
+          console.log(tx.logs[0].args._tokensReceived.toNumber());
+          this.setState({ boughtTokens: tx.logs[0].args._tokensReceived.toNumber() })
+          this.getMetadata();
+          }).catch(error => {
         console.log(error);
       })
-    })
   },
 })
 
