@@ -100,8 +100,10 @@ body, .container, .splash, main {
 }
 
 .splash ul {
-  text-align: left;
   display: inline-block;
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
 }
 
 .pure-button-primary {

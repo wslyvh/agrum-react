@@ -15,16 +15,15 @@ var LoginContainer = React.createClass({
         <img height="200px" src="http://preview.ibb.co/en3ii6/logo_fundo_branco2.png" />
           <br />
           <br />
+          <br />
           <span><LoginButton /></span>
           <br />
           <br />
-          <br />
-          <span><strong>Daniel Novy&#39;s Team</strong></span>
-          <br />
           <ul>
-            <li>Fernando Paris</li>
-            <li>Wesley van Heije</li>
+            <li>Daniel Novy</li>
             <li>Luiz Hamilton Soares</li>
+            <li>Wesley van Heije</li>
+            <li>Fernando Paris</li>
             <li>Patricio L&oacute;pez</li>
             <li>Marc de Klerk</li>
           </ul>
