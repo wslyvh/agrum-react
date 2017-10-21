@@ -4,6 +4,16 @@ import getWeb3 from '../util/web3/getWeb3'
 import VineyardContract from '../../build/contracts/Vineyard.json'
 import VineyardRegistryContract from '../../build/contracts/VineyardRegistry.json'
 
+let map;
+let bounds = new window.google.maps.LatLngBounds();
+let sub_area;
+let coordinates=[];
+let i = 0;
+let color = ['#FF0000', '#4286f4','#ffff00','#ff00b2','#bb00ff','#00ffff','#26ff00','#00ff87'];
+let infowindow = new window.google.maps.InfoWindow();
+let rectArr=[];
+let cols=["red","blue","green","yellow","orange","gray"]
+
 var BuyPlotContainer = React.createClass({
 
   componentWillMount: function() {
@@ -24,12 +34,80 @@ var BuyPlotContainer = React.createClass({
     await this.getMetadata()
 },
 
+  componentDidMount() { 
+    var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
+  
+      var self = this;
+  
+      map = new window.google.maps.Map(document.getElementById('map'),{
+        center: coachella,
+        zoom: 17,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: window.google.maps.ControlPosition.RIGHT_CENTER
+        },
+        streetViewControl: false,
+        mapTypeControl: false,
+        mapTypeId: window.google.maps.MapTypeId.SATELLITE
+      });
+
+      //this.drawRects();
+    },
+
   getInitialState() {
     return {
       web3: null,
-      availableTokens : 1,
+      availableTokens : 0,
       vineyard: null
     };
+  },
+
+  async drawRects() {
+    console.log('drawing..')
+    
+    var NW=new window.google.maps.LatLng(-33.560367, -69.038029)
+    var width = 8;
+    var height = 13;
+  
+    var NS = window.google.maps.geometry.spherical.computeOffset(NW,20,90)
+    var SS = window.google.maps.geometry.spherical.computeOffset(NW,20,180)
+
+    var tokenSupply = this.state.tokenSupply;
+    var availableTokens = this.state.availableTokens;
+    var soldTokens = tokenSupply - availableTokens;
+    
+    console.log('availableTokens: ' + availableTokens);
+    console.log('soldTokens: ' + soldTokens);
+
+    for (var i = 0; i < height; i++) {
+      NE = window.google.maps.geometry.spherical.computeOffset(NS,i*20,180)
+      SW = window.google.maps.geometry.spherical.computeOffset(SS,i*20,180)
+      for (var a = 0; a < width; a++) {
+        var rectangle = new window.google.maps.Rectangle();
+        
+        var color = cols[1];
+        if (soldTokens > 0) { 
+            color = cols[2];
+            soldTokens--;
+        }
+        var rectOptions = {
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: color,
+              fillOpacity: 0.35,
+              map: map,
+              bounds: new window.google.maps.LatLngBounds(SW,NE)
+            };
+            rectangle.setOptions(rectOptions);
+            rectArr.push(rectangle);
+
+            //this.bindWindow(rectangle,rectArr.length);
+          
+          var SW = window.google.maps.geometry.spherical.computeOffset(SW,20,90)
+          var NE = window.google.maps.geometry.spherical.computeOffset(NE,20,90)
+        }
+      }
   },
 
   async getMetadata() {
@@ -47,7 +125,10 @@ var BuyPlotContainer = React.createClass({
       "address": this.state.vineyardContract.address
     };
     this.setState({ vineyard: vineyard });
+    this.setState({ tokenSupply: data[4].toNumber() });
     this.setState({ availableTokens: data[5].toNumber() });
+
+    this.drawRects();
   },
 
   render: function() {
@@ -71,7 +152,9 @@ var BuyPlotContainer = React.createClass({
         <div>
           <button onClick={() => this.buyPlots()}>Buy</button>
         </div>
-          {summary}
+        {summary}
+        
+        <div id="map" style={{width: '100%' , height:'600px'}} >x</div>
      </div>
     );
   },
