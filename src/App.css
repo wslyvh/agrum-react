@@ -84,6 +84,13 @@ body, .container, .splash, main {
   text-align: center;
 }
 
+.login-with-uport img {
+  border-radius: 100px;
+  height: 200px;
+  border: 2px solid #000;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
 .splash {
   text-align: center;
   background: url('http://1.bp.blogspot.com/-7hDmSn6CG-U/TxOXJb2q2WI/AAAAAAAADdc/rKgQhdcVRQQ/s1600/1Ds21708_Weinberge_Seinsheim.jpg');
@@ -104,6 +111,14 @@ body, .container, .splash, main {
   list-style: none;
   padding: 0px;
   margin: 0px;
+}
+
+.splash ul li {
+  display: inline-block;
+  padding: 1em;
+  background-color: rgba(255, 255, 255, 0.9);
+  font-size: 1em;
+  font-weight: bold;
 }
 
 .pure-button-primary {

@@ -15,8 +15,9 @@ import uPortLogo from '../../../img/uport-logo.svg'
 
 const LoginButton = ({ onLoginUserClick }) => {
   return(
-      <a href="#" onClick={uPortLogin}>
-      <img height="80px" src="https://static1.squarespace.com/static/578f3f1d15d5db7814d05191/t/58061a796b8f5beaefc681ea/1476795025049" />
+      <a href="#" onClick={uPortLogin} className="login-with-uport">
+
+      <img src="http://preview.ibb.co/b9Xt0m/login_with_uport.png" />
 
       </a>
   )
