@@ -3,6 +3,15 @@
 .Vineyards {
   text-align: center;
 }
+.lu {
+  text-align: center;
+}
+.li {
+  text-align: center;
+}
+.container {
+  text-align: center;
+}
 
 .vineyard {
   margin: auto;
@@ -35,6 +44,10 @@
 
 .vineyard .buy .rate .unit {
   font-size: 0.5em;
+}
+
+.tokensAvailable {
+  font-size: 0.3em;
 }
 
 .vineyard .buy {

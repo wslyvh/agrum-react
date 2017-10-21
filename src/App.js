@@ -75,8 +75,9 @@ var Vineyard = React.createClass({
         <br/>
         <div className="buy">
           <div className="rate">{this.props.item.tokenRate} <span class="unit">ETH / plot</span></div>
+          <div className="tokensAvailable"> {this.props.item.availableTokens} / {this.props.item.tokenSupply} tokens available</div>
           <div>
-            <Link to={`vineyard/${this.props.item.address}`}>Buy Now</Link>
+            <Link to={`vineyard/${this.props.item.address}`}>Buy Now </Link>
           </div>
         </div>
       </div>
