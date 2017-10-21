@@ -30,6 +30,15 @@
   border: 1px solid rgba(0, 0, 0, .2);
 }
 
+#menu { 
+  list-style-type: none;
+}
+
+#menu li { 
+  display: inline;
+  padding: 20px;
+}
+
 .sold {
   background: #f44b42;
 }

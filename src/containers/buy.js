@@ -4,6 +4,7 @@ import getWeb3 from '../util/web3/getWeb3'
 import VineyardContract from '../../build/contracts/Vineyard.json'
 import VineyardRegistryContract from '../../build/contracts/VineyardRegistry.json'
 import globalStore from "../globalStore.js";
+var MenuComponent = require('../containers/menu.js').MenuComponent
 import '../App.css'
 
 let map;
@@ -36,11 +37,11 @@ var BuyPlotContainer = React.createClass({
     await this.getMetadata()
 },
 
-  // componentDidMount() { 
+  // componentDidMount() {
   //   var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
-  
+
   //     var self = this;
-  
+
   //     map = new window.google.maps.Map(document.getElementById('map'),{
   //       center: coachella,
   //       zoom: 17,
@@ -69,9 +70,9 @@ var BuyPlotContainer = React.createClass({
     var lat = this.state.vineyard.latitude;
     var long = this.state.vineyard.longitude;
     var coachella = new window.google.maps.LatLng(lat, long);
-    
+
         var self = this;
-    
+
         map = new window.google.maps.Map(document.getElementById('map'),{
           center: coachella,
           zoom: 17,
@@ -87,14 +88,14 @@ var BuyPlotContainer = React.createClass({
     var NW=new window.google.maps.LatLng(lat, long)
     var width = 8;
     var height = 13;
-  
+
     var NS = window.google.maps.geometry.spherical.computeOffset(NW,20,90)
     var SS = window.google.maps.geometry.spherical.computeOffset(NW,20,180)
 
     var tokenSupply = this.state.tokenSupply;
     var availableTokens = this.state.availableTokens;
     var soldTokens = tokenSupply - availableTokens;
-    
+
     console.log('availableTokens: ' + availableTokens);
     console.log('soldTokens: ' + soldTokens);
 
@@ -105,9 +106,9 @@ var BuyPlotContainer = React.createClass({
       SW = window.google.maps.geometry.spherical.computeOffset(SS,i*20,180)
       for (var a = 0; a < width; a++) {
         var rectangle = new window.google.maps.Rectangle();
-        
+
         var color = cols[1];
-        if (soldTokens > 0) { 
+        if (soldTokens > 0) {
             color = cols[2];
             soldTokens--;
         }
@@ -124,7 +125,7 @@ var BuyPlotContainer = React.createClass({
             rectArr.push(rectangle);
 
             //this.bindWindow(rectangle,rectArr.length);
-          
+
           var SW = window.google.maps.geometry.spherical.computeOffset(SW,20,90)
           var NE = window.google.maps.geometry.spherical.computeOffset(NE,20,90)
         }
@@ -164,6 +165,8 @@ var BuyPlotContainer = React.createClass({
 
 
       <div>
+      <MenuComponent />
+
         <p>Thanks {localStorage.getItem('userName')} for willing to buy plots</p>
         <h4>Buy plot - Only {this.state.availableTokens} tokens available</h4>
         <div >
@@ -177,7 +180,7 @@ var BuyPlotContainer = React.createClass({
           <button onClick={() => this.buyPlots()}>Buy</button>
         </div>
         {summary}
-        
+
         <div id="map" style={{width: '100%' , height:'600px'}} ></div>
         <p>* Red sold - Green available</p>
      </div>

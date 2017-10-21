@@ -258,6 +258,8 @@ class ShowVinyard extends Component {
     render(){
         return (
           <div>
+            
+          <MenuComponent />
           <h4>Vineyard name:{this.props.match.params.address}</h4>
           <h4>what3words location: {this.state.what3wordsVineyard}</h4>
           <h4>Buy (in Wei): </h4>
@@ -275,6 +277,17 @@ class ShowVinyard extends Component {
     }
 }
 
+var MenuComponent = React.createClass({
+  render: function() {
+    return (
+      <ul id="menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/vineyards">Overview</a></li>
+        <li><a href="/add">Add vineyard</a></li>
+      </ul>
+    );
+  }
+});
 
 render(
     <Router>

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+
 // UI Components
 import LoginButton from '../user/ui/loginbutton/LoginButton'
 import LogoutButtonContainer from '../user/ui/logoutbutton/LogoutButtonContainer'
 var LoginContainer = require('../containers/login.js').LoginContainer
+var MenuComponent = require('../containers/menu.js').MenuComponent
 
 import VineyardRegistryContract from '../../build/contracts/VineyardRegistry.json'
 import VineyardContract from '../../build/contracts/Vineyard.json'
@@ -56,6 +58,7 @@ var AddVineyardContainer = React.createClass({
   render: function() {
     return (
       <div>
+        <MenuComponent />
         <h4>Add vineyard</h4>
         <div >
           <label>Name:</label>
@@ -140,6 +143,8 @@ var VineyardContainer = React.createClass({
   render: function() {
     return (
       <div className="Vineyards">
+      <MenuComponent />
+
       { this.state.vineyards.map(function(item) {
       console.log("!")
       console.log(item)
