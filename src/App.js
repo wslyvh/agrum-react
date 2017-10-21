@@ -75,9 +75,8 @@ var Vineyard = React.createClass({
         <br/>
         <div className="buy">
           <div className="rate">{this.props.item.tokenRate} <span class="unit">ETH / plot</span></div>
-          <div className="tokensAvailable"> {this.props.item.availableTokens}/ {this.props.item.tokenSupply} tokens available</div>
           <div>
-            <Link to={`vineyard/${this.props.item.address}`}>Buy Now </Link>
+            <Link to={`vineyard/${this.props.item.address}`}>Buy Now</Link>
           </div>
         </div>
       </div>
@@ -281,15 +280,49 @@ class Login extends Component {
   }
 }
 
-class ShowVinyard extends Component {
+var ShowVinyard = React.createClass({
+  componentWillMount: function() {
+
+    getWeb3.then(results => {
+      this.setState({ web3: results.payload.web3Instance })
+
+      this.instantiateContract()
+    })
+    .catch(error => console.log('Error finding web3: ' + error))
+  },
+
+  async instantiateContract() {
+    console.log('-----')
+    console.log(this.state)
+    var vineyardContract = contract(VineyardContract)
+    vineyardContract.setProvider(this.state.web3.currentProvider)
+
+    var vineyardAddress = this.props.match.params.address
+    var vinyardInstance = vineyardContract.at(vineyardAddress)
+
+    var data = await vinyardInstance.getMetadata()
+    console.log(data)
+
+    var vineyard = {
+      "name": data[0],
+      "country": data[1],
+      "latitude": data[2],
+      "longitude": data[3],
+      "tokenSupply": data[4].toNumber(),
+      "availableTokens": data[5].toNumber(),
+      "tokenRate": data[6].toNumber(),
+      "address": vineyardAddress
+    };
+},
+
     render(){
-        return (
-          <div>
-<h4>{this.props.match.params.name}</h4>
-          </div>
-        );
+      return (
+        <div>
+          <h4>{this.props.match.params.address}</h4>
+        </div>
+      );
     }
-}
+})
 
 
 
