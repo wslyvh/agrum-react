@@ -5,8 +5,8 @@ var MenuComponent = React.createClass({
     return (
       <ul id="menu">
         <li><a href="/">Home</a></li>
-        <li><a href="/vineyards">Overview</a></li>
-        <li><a href="/add">Add vineyard</a></li>
+        <li><a href="/vineyards">Listing</a></li>
+        <li><a href="/add">Admin</a></li>
       </ul>
     );
   }
