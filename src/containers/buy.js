@@ -13,7 +13,7 @@ let i = 0;
 let color = ['#FF0000', '#4286f4','#ffff00','#ff00b2','#bb00ff','#00ffff','#26ff00','#00ff87'];
 let infowindow = new window.google.maps.InfoWindow();
 let rectArr=[];
-let cols=["red","blue","green","yellow","orange","gray"]
+let cols=["#dddddd","#b8f441","#f44b42","yellow","orange","gray"]
 
 var BuyPlotContainer = React.createClass({
 
@@ -35,25 +35,25 @@ var BuyPlotContainer = React.createClass({
     await this.getMetadata()
 },
 
-  componentDidMount() { 
-    var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
+  // componentDidMount() { 
+  //   var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
   
-      var self = this;
+  //     var self = this;
   
-      map = new window.google.maps.Map(document.getElementById('map'),{
-        center: coachella,
-        zoom: 17,
-        zoomControl: true,
-        zoomControlOptions: {
-          position: window.google.maps.ControlPosition.RIGHT_CENTER
-        },
-        streetViewControl: false,
-        mapTypeControl: false,
-        mapTypeId: window.google.maps.MapTypeId.SATELLITE
-      });
+  //     map = new window.google.maps.Map(document.getElementById('map'),{
+  //       center: coachella,
+  //       zoom: 17,
+  //       zoomControl: true,
+  //       zoomControlOptions: {
+  //         position: window.google.maps.ControlPosition.RIGHT_CENTER
+  //       },
+  //       streetViewControl: false,
+  //       mapTypeControl: false,
+  //       mapTypeId: window.google.maps.MapTypeId.SATELLITE
+  //     });
 
-      //this.drawRects();
-    },
+  //     //this.drawRects();
+  //   },
 
   getInitialState() {
     return {
@@ -66,6 +66,23 @@ var BuyPlotContainer = React.createClass({
   async drawRects() {
     console.log('drawing..')
     
+    var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
+    
+        var self = this;
+    
+        map = new window.google.maps.Map(document.getElementById('map'),{
+          center: coachella,
+          zoom: 17,
+          zoomControl: true,
+          zoomControlOptions: {
+            position: window.google.maps.ControlPosition.RIGHT_CENTER
+          },
+          streetViewControl: false,
+          mapTypeControl: false,
+          mapTypeId: window.google.maps.MapTypeId.SATELLITE
+        });
+
+
     var NW=new window.google.maps.LatLng(-33.560367, -69.038029)
     var width = 8;
     var height = 13;
@@ -80,6 +97,8 @@ var BuyPlotContainer = React.createClass({
     console.log('availableTokens: ' + availableTokens);
     console.log('soldTokens: ' + soldTokens);
 
+    rectArr = [];
+    rectArr.length = 0;
     for (var i = 0; i < height; i++) {
       NE = window.google.maps.geometry.spherical.computeOffset(NS,i*20,180)
       SW = window.google.maps.geometry.spherical.computeOffset(SS,i*20,180)
@@ -92,7 +111,7 @@ var BuyPlotContainer = React.createClass({
             soldTokens--;
         }
         var rectOptions = {
-              strokeColor: "#FF0000",
+              strokeColor: cols[0],
               strokeOpacity: 0.8,
               strokeWeight: 2,
               fillColor: color,
@@ -158,7 +177,8 @@ var BuyPlotContainer = React.createClass({
         </div>
         {summary}
         
-        <div id="map" style={{width: '100%' , height:'600px'}} >x</div>
+        <div id="map" style={{width: '100%' , height:'600px'}} ></div>
+        <p>* Red sold - Green available</p>
      </div>
     );
   },

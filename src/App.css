@@ -22,6 +22,22 @@
   margin-bottom: 50px;
 }
 
+.foo {
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+.sold {
+  background: #f44b42;
+}
+
+.available {
+  background: #b8f441;
+}
+
 .vineyard .title {
   background-color: rgba(255,255,255,0.5);
   padding: 0.5em;
