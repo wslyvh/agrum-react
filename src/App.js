@@ -270,11 +270,11 @@ class Login extends Component {
             <p><small>Developed by <strong>Daniel Novy's Team</strong> at Dubai's Hackaton</small></p>
             <p><small>
               <ul>
-                <br>Fernando Paris</br>
-                <br>Wesley van Heije</br>
-                <br>Luiz Hamilton Soares</br>
-                <br>Patricio L&oacute;pez</br>
-                <br>Marc de Klerk</br>
+                <li>Fernando Paris</li>
+                <li>Wesley van Heije</li>
+                <li>Luiz Hamilton Soares</li>
+                <li>Patricio L&oacute;pez</li>
+                <li>Marc de Klerk</li>
               </ul>
             </small></p>
             </div>
