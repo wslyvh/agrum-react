@@ -43,4 +43,4 @@ var LoginContainer = React.createClass({
   }
 })
 
-module.exports = {LoginContainer  }
+module.exports = {LoginContainer}
