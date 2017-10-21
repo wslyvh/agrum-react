@@ -32,7 +32,6 @@ contract('VineyardRegistry', function(accounts) {
     it ('should be possible to create a vineyard', async() => { 
         tx = await VineyardRegistry.createVineyard('la Francisa', 'LFT', 1000, 10, 'Argentina', latitude1, longitude1, {from: admin });
 
-        console.log(tx);
         vinyardAddress = tx.logs[0].args.vinyardAddress;
         vinyard = VineyardAbi.at(vinyardAddress);
         assert.isNotNull(vinyard);
@@ -109,6 +108,7 @@ contract('VineyardRegistry', function(accounts) {
         assert.strictEqual(vinyardBalance.toNumber(), initialSupply);
         
         buyPlotTx = await vinyard.buyPlot({from: user1, value: value});
+        console.log(buyPlotTx);
         userBalance = await token.balanceOf(user1);
         //console.log('User balance: ' + userBalance.toNumber());
         assert.strictEqual(userBalance.toNumber(), value * ratio);

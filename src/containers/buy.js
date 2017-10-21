@@ -4,38 +4,114 @@ import getWeb3 from '../util/web3/getWeb3'
 import VineyardContract from '../../build/contracts/Vineyard.json'
 import VineyardRegistryContract from '../../build/contracts/VineyardRegistry.json'
 
+let map;
+let bounds = new window.google.maps.LatLngBounds();
+let sub_area;
+let coordinates=[];
+let i = 0;
+let color = ['#FF0000', '#4286f4','#ffff00','#ff00b2','#bb00ff','#00ffff','#26ff00','#00ff87'];
+let infowindow = new window.google.maps.InfoWindow();
+let rectArr=[];
+let cols=["red","blue","green","yellow","orange","gray"]
+
 var BuyPlotContainer = React.createClass({
 
   componentWillMount: function() {
     getWeb3.then(results => {
       this.setState({ web3: results.payload.web3Instance })
-
       this.instantiateContract()
     })
     .catch(error => console.log('Error finding web3: ' + error))
   },
 
-  instantiateContract() {
+  async instantiateContract() {
     var vineyardContract = contract(VineyardContract)
     vineyardContract.setProvider(this.state.web3.currentProvider)
 
     var vineyardAddress = this.props.match.params.address
     var vineyard = vineyardContract.at(vineyardAddress)
-
-    this.setState({ vineyard: vineyard })
-
-    console.log(this.getMetadata())
+    this.setState({vineyardContract: vineyard})
+    await this.getMetadata()
 },
+
+  componentDidMount() { 
+    var coachella = new window.google.maps.LatLng(-33.560367, -69.038029);
+  
+      var self = this;
+  
+      map = new window.google.maps.Map(document.getElementById('map'),{
+        center: coachella,
+        zoom: 17,
+        zoomControl: true,
+        zoomControlOptions: {
+          position: window.google.maps.ControlPosition.RIGHT_CENTER
+        },
+        streetViewControl: false,
+        mapTypeControl: false,
+        mapTypeId: window.google.maps.MapTypeId.SATELLITE
+      });
+
+      //this.drawRects();
+    },
 
   getInitialState() {
     return {
-      vineyard: null,
-      web3: null
+      web3: null,
+      availableTokens : 0,
+      vineyard: null
     };
   },
 
+  async drawRects() {
+    console.log('drawing..')
+    
+    var NW=new window.google.maps.LatLng(-33.560367, -69.038029)
+    var width = 8;
+    var height = 13;
+  
+    var NS = window.google.maps.geometry.spherical.computeOffset(NW,20,90)
+    var SS = window.google.maps.geometry.spherical.computeOffset(NW,20,180)
+
+    var tokenSupply = this.state.tokenSupply;
+    var availableTokens = this.state.availableTokens;
+    var soldTokens = tokenSupply - availableTokens;
+    
+    console.log('availableTokens: ' + availableTokens);
+    console.log('soldTokens: ' + soldTokens);
+
+    for (var i = 0; i < height; i++) {
+      NE = window.google.maps.geometry.spherical.computeOffset(NS,i*20,180)
+      SW = window.google.maps.geometry.spherical.computeOffset(SS,i*20,180)
+      for (var a = 0; a < width; a++) {
+        var rectangle = new window.google.maps.Rectangle();
+        
+        var color = cols[1];
+        if (soldTokens > 0) { 
+            color = cols[2];
+            soldTokens--;
+        }
+        var rectOptions = {
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: color,
+              fillOpacity: 0.35,
+              map: map,
+              bounds: new window.google.maps.LatLngBounds(SW,NE)
+            };
+            rectangle.setOptions(rectOptions);
+            rectArr.push(rectangle);
+
+            //this.bindWindow(rectangle,rectArr.length);
+          
+          var SW = window.google.maps.geometry.spherical.computeOffset(SW,20,90)
+          var NE = window.google.maps.geometry.spherical.computeOffset(NE,20,90)
+        }
+      }
+  },
+
   async getMetadata() {
-    var data = await this.state.vineyard.getMetadata()
+    var data = await this.state.vineyardContract.getMetadata()
     console.log(data)
 
     var vineyard = {
@@ -46,71 +122,57 @@ var BuyPlotContainer = React.createClass({
       "tokenSupply": data[4].toNumber(),
       "availableTokens": data[5].toNumber(),
       "tokenRate": data[6].toNumber(),
-      "address": this.state.vineyard.address
+      "address": this.state.vineyardContract.address
     };
+    this.setState({ vineyard: vineyard });
+    this.setState({ tokenSupply: data[4].toNumber() });
+    this.setState({ availableTokens: data[5].toNumber() });
+
+    this.drawRects();
   },
 
   render: function() {
+    let summary = null;
+    if(this.state.boughtTokens > 0){
+      summary = <div> <p>You Bought: {this.state.boughtTokens}</p> </div>;
+    }
     return (
+
+
       <div>
-        <h4>Add vineyard</h4>
+        <h4>Buy plot - Only {this.state.availableTokens} tokens available</h4>
         <div >
-          <label>Name:</label>
-          <input type="text" id="name" />
+          <label>from:</label>
+          <input type="text" id="address" />
         </div>
         <div >
-          <label>Country:</label>
-          <input type="text" id="country" />
+          <label>Ether:</label>
+          <input type="text" id="ether" />
         </div>
-        <div >
-          <label>Symbol:</label>
-          <input type="text" id="symbol" />
+        <div>
+          <button onClick={() => this.buyPlots()}>Buy</button>
         </div>
-        <div >
-          <label>Supply:</label>
-          <input type="text" id="supply" />
-        </div>
-        <div >
-          <label>Rate:</label>
-          <input type="text" id="rate" />
-        </div>
-        <div >
-          <label>Latitude:</label>
-          <input type="text" id="latitude" />
-        </div>
-        <div >
-          <label>Longitude:</label>
-          <input type="text" id="longitude" />
-        </div>
-      </div>
+        {summary}
+        
+        <div id="map" style={{width: '100%' , height:'600px'}} >x</div>
+     </div>
     );
   },
 
-  addVineyard: function() {
-    const registry = contract(VineyardRegistryContract)
-    registry.setProvider(this.state.web3.currentProvider)
-    var account = this.state.defaultAccount;
+  buyPlots: function() {
 
-    var registryInstance;
-    registry.deployed().then((instance) => {
-      registryInstance = instance
-      //string _name, string _symbol, uint _initialSupply, uint _rate, string _country, string _latitude, string _longitude
-      var name = document.getElementById('name').value
-      var country = document.getElementById('country').value
-      var symbol = document.getElementById('symbol').value
-      var supply = document.getElementById('supply').value
-      var rate = document.getElementById('rate').value
-      var latitude = document.getElementById('latitude').value
-      var longitude = document.getElementById('longitude').value
+    var vineyard = this.state.vineyardContract;
+    var address = document.getElementById('address').value
+    var ether = document.getElementById('ether').value
 
-      var n1 = Number(supply);
-      var n2 = Number(rate);
-      registryInstance.createVineyard(name, symbol, n1, n2, country, latitude, longitude, {from: account, gas: 2000000}).then(tx => {
-        console.log(tx);
-      }).catch(error => {
+    vineyard.buyPlot({from: address , value: ether , gas: 2000000}).then((tx) => {
+          console.log(tx);
+          console.log(tx.logs[0].args._tokensReceived.toNumber());
+          this.setState({ boughtTokens: tx.logs[0].args._tokensReceived.toNumber() })
+          this.getMetadata();
+          }).catch(error => {
         console.log(error);
       })
-    })
   },
 })
 
